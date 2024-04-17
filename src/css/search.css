@@ -1,0 +1,56 @@
+.typingtext{
+    background-color: #badc58;
+    border-radius: 5px;
+}
+
+.usertext{
+    background-color: #6ab04c;
+    border-radius: 5px;
+}
+
+.transcripttext{
+    background-color: #c7ecee;
+    border-radius: 5px;
+}
+
+.searchtext{
+    background-color: #30336b;
+    border-radius: 5px;
+}
+
+.pair_link{
+    text-decoration: none;
+    color: #30336b;
+}
+
+.center-load{
+    text-align: center;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+}
+
+#customized-dialog-title{
+    color: white;
+}
+
+#customized-dialog-divider{
+    color: white;
+}
+
+#customized-dialog-context{
+    color: white;
+}
+
+.enter_css{
+    border: 1px solid #c7ecee;
+    height: 15px;
+    width: 25px;
+    font-size: 8px;
+    color: #c7ecee;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border-radius: 5px;
+}
