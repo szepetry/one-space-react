@@ -108,7 +108,7 @@ export default function SearchField({ className = '' }) {
     }
 
     const guidanceText1 = 'After searching '
-    const guidanceText2 = 'dataset for similar mental health counseling transcripts, the following five prompts were found. You can click the prompts to view their transcript.'
+    const guidanceText2 = 'dataset for similar mental health counseling transcripts, the following ten prompts were found. You can click the prompts to view their transcript.'
 
     return <>
         <Box className={`${className} my-2`}>
