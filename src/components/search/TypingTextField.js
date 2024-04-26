@@ -4,7 +4,7 @@ import DoneIcon from '@mui/icons-material/Done'
 import CustomizedDialogs from './CustomDialog'
 
 
-function TypingTextField({ idx, message = '', className = '', typingEnabled = false, vectorMode = false, vectors, setVectors, queryLangchain }) {
+function TypingTextField({ idx, message = '', className = '', typingEnabled = false, vectorMode = false, vectors, setVectors, queryLangchain, token }) {
     const [typedText, setTypedText] = useState("");
     const [index, setIndex] = useState(0);
     const [focused, setFocused] = useState(false);
@@ -31,15 +31,16 @@ function TypingTextField({ idx, message = '', className = '', typingEnabled = fa
 
     const handleSubmit = async (idx) => {
         try {
-            setLoading(true);
-            // queryVectors(newInputValue)
-            setDialogOpen(false)
-            let new_vector = [vectors[idx]]
-            console.log(new_vector)
-            setVectors(new_vector)
-            setTypedText("")
-            queryLangchain(new_vector[0])
-            setLoading(false);
+            if (token != null) {
+                setLoading(true);
+                // queryVectors(newInputValue)
+                setDialogOpen(false)
+                let new_vector = [vectors[idx]]
+                setVectors(new_vector)
+                setTypedText("")
+                queryLangchain(new_vector[0])
+                setLoading(false);
+            }
         } catch (error) {
             setLoading(false);
             console.error('Fetch error:', error);

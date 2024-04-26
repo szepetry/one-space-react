@@ -12,7 +12,6 @@ export function NavbarButton({ button_name, route_url, is_selected }) {
     function navigateToRoute(route_url) {
 
         if (location.state) {
-            // console.log(location.state.search_query)
             navigate(route_url, { state: { search_query: location.state.search_query } });
         }
         else {

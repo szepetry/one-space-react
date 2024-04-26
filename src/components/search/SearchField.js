@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CircularProgress, IconButton, TextField, InputAdornment, Box, Typography } from '@mui/material'
 import { Done as DoneIcon } from '@mui/icons-material';
 import { httpCall } from '../../helpers/HttpCall'
+import getAnonymousToken from '../../helpers/auth_helper'
 import TypingTextField from "../../components/search/TypingTextField";
 import PromptFieldItems from "../../components/search/PromptFieldItems";
 import LoadingField from "../../components/search/LoadingField";
@@ -15,7 +16,17 @@ export default function SearchField({ className = '' }) {
     const [loadingLangchain, setLoadingLangchain] = useState(false);
     const [vectors, setVectors] = useState(null);
     const [langchainResult, setLangchainResult] = useState(null);
+    const [jwtToken, setJwtToken] = useState(null);
 
+
+    useEffect(() => {
+        const initializeAuth = async () => {
+            const token = await getAnonymousToken();
+            setJwtToken(token)
+        };
+
+        initializeAuth();
+    }, []);
 
     const handleInputChange = (event) => {
         let newInputValue = event.target.value
@@ -26,8 +37,9 @@ export default function SearchField({ className = '' }) {
         try {
             let response = await httpCall(
                 {
-                    http: `${process.env.REACT_APP_API_HOST}/queryVectors`,
+                    http: `${process.env.REACT_APP_API_HOST}/api/v1/queryVectors`,
                     method: "POST",
+                    token: jwtToken,
                     body: { "queryString": newInputValue }
                 }
             );
@@ -35,12 +47,10 @@ export default function SearchField({ className = '' }) {
                 console.log(response.error)
             }
             else {
-                // console.log(response.data)
                 let vecs_copy = response.data
                 for (let vec of vecs_copy) {
                     vec['user_input'] = newInputValue
                 }
-                console.log(vecs_copy)
                 setVectors(vecs_copy)
                 setLoading(false)
             }
@@ -56,8 +66,9 @@ export default function SearchField({ className = '' }) {
 
             let response = await httpCall(
                 {
-                    http: `${process.env.REACT_APP_API_HOST}/queryLangchain`,
+                    http: `${process.env.REACT_APP_API_HOST}/api/v1/queryLangchain`,
                     method: "POST",
+                    token: jwtToken,
                     body: { "vector": vector }
                 }
             );
@@ -66,7 +77,6 @@ export default function SearchField({ className = '' }) {
                 console.log(response.error)
             }
             else {
-                console.log(response.data)
                 setLangchainResult(response.data)
 
                 setLoadingLangchain(false)
@@ -79,11 +89,11 @@ export default function SearchField({ className = '' }) {
 
     const handleSubmit = async (newInputValue) => {
         try {
-            setLoading(true);
-            queryVectors(newInputValue)
-            // setTypedText("")
-
-
+            if (jwtToken != null) {
+                setLoading(true);
+                queryVectors(newInputValue)
+                // setTypedText("")
+            }
         } catch (error) {
             setLoading(false);
             console.error('Fetch error:', error);
@@ -94,10 +104,9 @@ export default function SearchField({ className = '' }) {
     const handleEnterKeyPress = (event) => {
         let newInputValue = event.target.value
         if (event.key === 'Enter' && newInputValue !== '') {
-            console.log("Enter press event!")
             handleSubmit(newInputValue)
         }
-        else if(event.key === 'Enter' && newInputValue === '') {
+        else if (event.key === 'Enter' && newInputValue === '') {
             setVectors(null);
             setLangchainResult(null);
         }
@@ -154,9 +163,9 @@ export default function SearchField({ className = '' }) {
                 }}
             />
         </Box>
-        {vectors && <Typography color={'white'} variant="caption">{guidanceText1} <a className='pair_link' href='https://lit.eecs.umich.edu/downloads.html#PAIR' target="_blank" rel="noreferrer">PAIR</a> {guidanceText2}</Typography>}
-        {vectors && <PromptFieldItems vectors={vectors} setVectors={setVectors} queryLangchain={queryLangchain} />}
-        {vectors && vectors.length === 1 && <Typography color={'white'} variant="caption">Using the selected transcript and your query, lets ask the OpenAI's LLM model for suggestions.</Typography>}
-        {vectors && vectors.length === 1 && (langchainResult ? <TypingTextField className={'searchtext'} typingEnabled={true} message={strip(langchainResult['text'])} /> : <LoadingField className='searchtext' />)}
+        {vectors && jwtToken && <Typography color={'white'} variant="caption">{guidanceText1} <a className='pair_link' href='https://lit.eecs.umich.edu/downloads.html#PAIR' target="_blank" rel="noreferrer">PAIR</a> {guidanceText2}</Typography>}
+        {vectors && jwtToken && <PromptFieldItems vectors={vectors} setVectors={setVectors} queryLangchain={queryLangchain} token={jwtToken}/>}
+        {vectors && jwtToken && vectors.length === 1 && <Typography color={'white'} variant="caption">Using the selected transcript and your query, lets ask the OpenAI's LLM model for suggestions.</Typography>}
+        {vectors && jwtToken && vectors.length === 1 && (langchainResult ? <TypingTextField className={'searchtext'} typingEnabled={true} message={strip(langchainResult['text'])} /> : <LoadingField className='searchtext' />)}
     </>
 }

@@ -12,7 +12,6 @@ export const httpCall = async ({ http, method, token, body, signal }) => {
         });
     }
     else if (signal !== "") {
-        console.log(http, method)
         req = await fetch(http, {
             method: method,
             headers: {
@@ -23,7 +22,6 @@ export const httpCall = async ({ http, method, token, body, signal }) => {
         });
     }
     else {
-        console.log(http, method)
         req = await fetch(http, {
             method: method,
             headers: {

@@ -2,7 +2,7 @@ import TypingTextField from '../../components/search/TypingTextField';
 
 
 
-function PromptFieldItems({ vectors, setVectors, queryLangchain }) {
+function PromptFieldItems({ vectors, setVectors, queryLangchain, token }) {
     return (<div>
         {vectors.map((vector, index) => {
             return <TypingTextField
@@ -15,6 +15,7 @@ function PromptFieldItems({ vectors, setVectors, queryLangchain }) {
                 vectors={vectors}
                 setVectors={setVectors}
                 queryLangchain={queryLangchain}
+                token={token}
             />;
         })}
     </div>)

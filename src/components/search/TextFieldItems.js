@@ -1,9 +1,3 @@
-import { useState, useEffect } from 'react'
-import { CircularProgress, IconButton, TextField, Box } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
-import { httpCall } from '../../helpers/HttpCall'
-import { useLocation, useNavigate } from 'react-router-dom'
 import TypingTextField from '../../components/search/TypingTextField';
 
 
